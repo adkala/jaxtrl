@@ -19,7 +19,8 @@ class Hyperparameters:
     loss_critic_type: str = "l2"
     average_gae: bool = False
     clip_grad_norm: bool = False
-
+    use_huber_loss: bool = False
+    huber_delta: float = 10.0
 
 class PPO:
     def __init__(

@@ -4,6 +4,7 @@ from jaxtrl.model.th import LambdaModule, create_mlp_layers
 from tensordict.nn import TensorDictModule as Mod
 from tensordict.nn import TensorDictSequential as Seq
 from torchrl.modules import LSTMModule, ValueOperator
+from jaxtrl.rl.ppo.popart import PopArt
 
 
 def mlp_critic_factory(
@@ -96,3 +97,15 @@ def lstm_critic_factory(
     critic_module.to(device)
 
     return critic_module
+
+
+def popart_critic(critic, beta=3e-4):
+
+    net = (
+        critic.module
+        if isinstance(critic, ValueOperator)
+        else critic.module[-1].module  
+    )
+
+    net[-1] = PopArt(net[-1], beta)
+    return critic, net[-1]
